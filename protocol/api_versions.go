@@ -1,8 +1,8 @@
 package protocol
 
 var APIVersions = []APIVersion{
-	{APIKey: ProduceKey, MinVersion: 0, MaxVersion: 5},
-	{APIKey: FetchKey, MinVersion: 0, MaxVersion: 3},
+	{APIKey: ProduceKey, MinVersion: 3, MaxVersion: 5},
+	{APIKey: FetchKey, MinVersion: 4, MaxVersion: 4},
 	{APIKey: OffsetsKey, MinVersion: 0, MaxVersion: 2},
 	{APIKey: MetadataKey, MinVersion: 0, MaxVersion: 1},
 	{APIKey: LeaderAndISRKey, MinVersion: 0, MaxVersion: 1},

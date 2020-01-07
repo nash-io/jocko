@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"encoding/binary"
 	"errors"
 	"math"
 )
@@ -16,7 +17,9 @@ type PacketDecoder interface {
 	Int16() (int16, error)
 	Int32() (int32, error)
 	Int64() (int64, error)
+	Varint() (int64, error)
 	ArrayLength() (int, error)
+	VarintBytes() ([]byte, error)
 	Bytes() ([]byte, error)
 	String() (string, error)
 	NullableString() (*string, error)
@@ -41,6 +44,11 @@ type PushDecoder interface {
 	ReserveSize() int
 	Fill(curOffset int, buf []byte) error
 	Check(curOffset int, buf []byte) error
+}
+
+func Decode0(b []byte, in Decoder) error {
+	d := NewDecoder(b)
+	return in.Decode(d)
 }
 
 func Decode(b []byte, in VersionedDecoder, version int16) error {
@@ -104,6 +112,19 @@ func (d *ByteDecoder) Int64() (int64, error) {
 	return tmp, nil
 }
 
+func (d *ByteDecoder) Varint() (int64, error) {
+	if d.remaining() == 0 {
+		d.off = len(d.b)
+		return -1, ErrInsufficientData
+	}
+	v, n := binary.Varint(d.b[d.off:])
+	if n <= 0 {
+		return -1, ErrInsufficientData
+	}
+	d.off += n
+	return v, nil
+}
+
 func (d *ByteDecoder) ArrayLength() (int, error) {
 	if d.remaining() < 4 {
 		d.off = len(d.b)
@@ -121,6 +142,30 @@ func (d *ByteDecoder) ArrayLength() (int, error) {
 }
 
 // collections
+
+func (d *ByteDecoder) VarintBytes() ([]byte, error) {
+	tmp, err := d.Varint()
+	if err != nil {
+		return nil, err
+	}
+	n := int(tmp)
+
+	switch {
+	case n < -1:
+		return nil, ErrInvalidByteSliceLength
+	case n == -1:
+		return nil, nil
+	case n == 0:
+		return make([]byte, 0), nil
+	case n > d.remaining():
+		d.off = len(d.b)
+		return nil, ErrInsufficientData
+	}
+
+	tmpStr := d.b[d.off : d.off+n]
+	d.off += n
+	return tmpStr, nil
+}
 
 func (d *ByteDecoder) Bytes() ([]byte, error) {
 	tmp, err := d.Int32()

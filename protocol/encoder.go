@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"encoding/binary"
 	"math"
 )
 
@@ -10,9 +11,11 @@ type PacketEncoder interface {
 	PutInt16(in int16)
 	PutInt32(in int32)
 	PutInt64(in int64)
+	PutVarint(in int64)
 	PutArrayLength(in int) error
 	PutRawBytes(in []byte) error
 	PutBytes(in []byte) error
+	PutVarintBytes(in []byte) error
 	PutString(in string) error
 	PutNullableString(in *string) error
 	PutStringArray(in []string) error
@@ -74,6 +77,12 @@ func (e *LenEncoder) PutInt64(in int64) {
 	e.Length += 8
 }
 
+func (e *LenEncoder) PutVarint(in int64) {
+	b := make([]byte, 10)
+	n := binary.PutVarint(b, in)
+	e.Length += n
+}
+
 func (e *LenEncoder) PutArrayLength(in int) error {
 	if in > math.MaxInt32 {
 		return ErrInvalidArrayLength
@@ -98,6 +107,14 @@ func (e *LenEncoder) PutRawBytes(in []byte) error {
 	}
 	e.Length += len(in)
 	return nil
+}
+func (e *LenEncoder) PutVarintBytes(in []byte) error {
+	if in == nil {
+		e.PutVarint(0)
+		return nil
+	}
+	e.PutVarint(int64(len(in)))
+	return e.PutRawBytes(in)
 }
 
 func (e *LenEncoder) PutString(in string) error {
@@ -197,6 +214,11 @@ func (e *ByteEncoder) PutInt64(in int64) {
 	e.off += 8
 }
 
+func (e *ByteEncoder) PutVarint(in int64) {
+	n := binary.PutVarint(e.b[e.off:], in)
+	e.off += n
+}
+
 func (e *ByteEncoder) PutArrayLength(in int) error {
 	e.PutInt32(int32(in))
 	return nil
@@ -214,6 +236,14 @@ func (e *ByteEncoder) PutBytes(in []byte) error {
 		return nil
 	}
 	e.PutInt32(int32(len(in)))
+	return e.PutRawBytes(in)
+}
+func (e *ByteEncoder) PutVarintBytes(in []byte) error {
+	if in == nil {
+		e.PutVarint(-1)
+		return nil
+	}
+	e.PutVarint(int64(len(in)))
 	return e.PutRawBytes(in)
 }
 
