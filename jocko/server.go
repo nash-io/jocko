@@ -30,6 +30,7 @@ func init() {
 	if strings.Contains(e, "server=1") {
 		serverVerboseLogs = true
 	}
+	log.SetLevel("debug")
 }
 
 // Broker is the interface that wraps the Broker's methods.

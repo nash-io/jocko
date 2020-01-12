@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/Shopify/sarama v1.13.0
+	github.com/Shopify/toxiproxy v2.1.4+incompatible // indirect
 	github.com/apache/thrift v0.0.0-20161221203622-b2a4d4ae21c7
 	github.com/armon/go-metrics v0.0.0-20171002182731-9a4b6e10bed6
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a
@@ -17,7 +18,7 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20160609142408-bb955e01b934
 	github.com/eapache/queue v1.0.2
 	github.com/go-kit/kit v0.6.0
-	github.com/golang/protobuf v0.0.0-20170920220647-130e6b02ab05
+	github.com/golang/protobuf v1.2.0
 	github.com/golang/snappy v0.0.0-20170215233205-553a64147049
 	github.com/hashicorp/consul v1.0.3
 	github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce
@@ -32,9 +33,12 @@ require (
 	github.com/hashicorp/raft-boltdb v0.0.0-20160913163600-a8adffd05b79
 	github.com/hashicorp/serf v0.0.0-20171222050535-911b3cc29e11
 	github.com/inconshreveable/mousetrap v1.0.0
+	github.com/kr/pretty v0.2.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.0
 	github.com/miekg/dns v0.0.0-20170930185408-946bd9fbed05
 	github.com/mitchellh/go-testing-interface v0.0.0-20171004221916-a61a99592b77
+	github.com/onsi/ginkgo v1.11.0 // indirect
+	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/opentracing/opentracing-go v1.0.2
 	github.com/pierrec/lz4 v1.0.1
 	github.com/pierrec/xxHash v0.1.1
@@ -56,7 +60,9 @@ require (
 	github.com/uber/jaeger-client-go v2.11.2+incompatible
 	github.com/uber/jaeger-lib v1.3.1
 	github.com/ugorji/go v0.0.0-20180112141927-9831f2c3ac10
-	golang.org/x/net v0.0.0-20180218175443-cbe0f9307d01
-	golang.org/x/sys v0.0.0-20171006175012-ebfc5b463182
+	golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
+	golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
+	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 	upspin.io v0.0.0-20180517055408-63f1073c7a3a
 )
