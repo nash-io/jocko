@@ -9,7 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/tysontate/gommap"
+	"github.com/nash-io/gommap"
 )
 
 var (
