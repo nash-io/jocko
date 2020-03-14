@@ -1,6 +1,6 @@
 # Jocko
 
-[![Build Status](https://semaphoreci.com/api/v1/nash-io/jocko/branches/master/shields_badge.svg)](https://semaphoreci.com/nash-io/jocko) [![codecov](https://codecov.io/gh/nash-io/jocko/branch/master/graph/badge.svg)](https://codecov.io/gh/nash-io/jocko)
+[![Build Status](https://semaphoreci.com/api/v1/nash-io/jocko/branches/master/shields_badge.svg)](https://semaphoreci.com/nash-io/jocko) [![codecov](https://codecov.io/gh/nash-io/jocko/branch/master/graph/badge.svg)](https://codecov.io/gh/nash-io/jocko) [![Go Report Card](https://goreportcard.com/badge/github.com/nash-io/jocko)](https://goreportcard.com/report/github.com/nash-io/jocko)
 
 Distributed commit log service in Go that is wire compatible with Kafka.
 
