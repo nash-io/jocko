@@ -99,7 +99,7 @@ func NewBroker(config *config.Config, tracer opentracing.Tracer) (*Broker, error
 		replicaLookup:    NewReplicaLookup(),
 		reconcileCh:      make(chan serf.Member, 32),
 		tracer:           tracer,
-		logStateInterval: time.Millisecond * 250,
+		logStateInterval: time.Second * 5,
 	}
 
 	if err := b.setupRaft(); err != nil {
@@ -117,7 +117,7 @@ func NewBroker(config *config.Config, tracer opentracing.Tracer) (*Broker, error
 
 	go b.monitorLeadership()
 
-	go b.logState()
+	// go b.logState()
 
 	return b, nil
 }
@@ -1011,8 +1011,9 @@ func (b *Broker) startReplica(replica *Replica) protocol.Error {
 	}
 
 	if replica.Log == nil {
+		path := filepath.Join(b.config.DataDir, "data", fmt.Sprintf("%s-%d", replica.Partition.Topic, replica.Partition.ID))
 		log, err := commitlog.New(commitlog.Options{
-			Path:            filepath.Join(b.config.DataDir, "data", fmt.Sprintf("%d", replica.Partition.ID)),
+			Path:            path,
 			MaxSegmentBytes: 1024,
 			MaxLogBytes:     -1,
 			CleanupPolicy:   commitlog.CleanupPolicy(topic.Config.GetValue("cleanup.policy").(string)),
