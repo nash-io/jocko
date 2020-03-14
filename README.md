@@ -3,39 +3,21 @@
 [![Build Status](https://semaphoreci.com/api/v1/travisjeffery/jocko/branches/master/shields_badge.svg)](https://semaphoreci.com/travisjeffery/jocko) [![Join the chat at https://gitter.im/travisjeffery/jocko](https://badges.gitter.im/travisjeffery/jocko.svg)](https://gitter.im/travisjeffery/jocko?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![codecov](https://codecov.io/gh/travisjeffery/jocko/branch/master/graph/badge.svg)](https://codecov.io/gh/travisjeffery/jocko)
 
-Kafka/distributed commit log service in Go.
+Distributed commit log service in Go that is wire compatible with Kafka.
+Created by [@travisjeffery](https://github.com/travisjeffery), continued by [nash](https://nash.io).
 
-## Goals of this project:
+## Goals:
 
-- Implement Kafka in Go
 - Protocol compatible with Kafka so Kafka clients and services work with Jocko
-- Make operating simpler
 - Distribute a single binary
 - Use Serf for discovery, Raft for consensus (and remove the need to run ZooKeeper)
-- Smarter configuration settings
-    - Able to use percentages of disk space for retention policies rather than only bytes and time kept
-    - Handling size configs when you change the number of partitions or add topics
-- Learn a lot and have fun
+- Simpler configuration settings
 
 ## TODO
 
-- [x] Producing
-- [x] Fetching
-- [x] Partition consensus and distribution
-- [ ] Protocol
-    - [x] Produce
-    - [x] Fetch
-    - [x] Metadata
-    - [x] Create Topics
-    - [x] Delete Topics
-    - [ ] Consumer group [current task]
-- [x] Discovery
-- [ ] API versioning [more API versions to implement]
-- [ ] Replication [first draft done - testing heavily now]
-
-## Hiatus Writing Book
-
-I’m writing a book for PragProg called Building Distributed Services with Go. [You can sign up on this mailing list and get updated when the book’s available.](http://eepurl.com/dC5-l1) It walks you through building a distributed commit log from scratch. I hope it will help Jocko contributors and people who want to work on distributed services.
+- [ ] Map features missing
+- [ ] Extensive protocol compliance test suit
+- [ ] Update all dependencies and code to up-to-date Go (as of MAR2020)
 
 ## Reading
 
@@ -66,13 +48,13 @@ I’m writing a book for PragProg called Building Distributed Services with Go. 
 1. Clone Jocko
 
     ```
-    $ go get github.com/travisjeffery/jocko
+    $ go get github.com/nash-io/jocko
     ```
 
 1. Build Jocko
 
     ```
-    $ cd $GOPATH/src/github.com/travisjeffery/jocko
+    $ cd $GOPATH/src/github.com/nash-io/jocko
     $ make build
     ```
 
@@ -81,7 +63,7 @@ I’m writing a book for PragProg called Building Distributed Services with Go. 
 
 ### Docker
 
-`docker build -t travisjeffery/jocko:latest .`
+`docker build -t nash-io/jocko:latest .`
 
 ## Contributing
 
@@ -90,11 +72,3 @@ See [CONTRIBUTING](CONTRIBUTING.md) for details on submitting patches and the co
 ## License
 
 Jocko is under the MIT license, see the [LICENSE](LICENSE) file for details.
-
----
-
-- [travisjeffery.com](http://travisjeffery.com)
-- GitHub [@travisjeffery](https://github.com/travisjeffery)
-- Twitter [@travisjeffery](https://twitter.com/travisjeffery)
-
-- Medium [@travisjeffery](https://medium.com/@travisjeffery)
