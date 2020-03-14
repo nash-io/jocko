@@ -1,9 +1,9 @@
 # Jocko
 
-[![Build Status](https://semaphoreci.com/api/v1/travisjeffery/jocko/branches/master/shields_badge.svg)](https://semaphoreci.com/travisjeffery/jocko) [![Join the chat at https://gitter.im/travisjeffery/jocko](https://badges.gitter.im/travisjeffery/jocko.svg)](https://gitter.im/travisjeffery/jocko?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![codecov](https://codecov.io/gh/travisjeffery/jocko/branch/master/graph/badge.svg)](https://codecov.io/gh/travisjeffery/jocko)
+[![Build Status](https://semaphoreci.com/api/v1/nash-io/jocko/branches/master/shields_badge.svg)](https://semaphoreci.com/nash-io/jocko) [![codecov](https://codecov.io/gh/nash-io/jocko/branch/master/graph/badge.svg)](https://codecov.io/gh/nash-io/jocko)
 
 Distributed commit log service in Go that is wire compatible with Kafka.
+
 Created by [@travisjeffery](https://github.com/travisjeffery), continued by [nash](https://nash.io).
 
 ## Goals:

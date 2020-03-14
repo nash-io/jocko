@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/nash-io/jocko/commitlog"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/commitlog"
 )
 
 var readerTests = []struct {

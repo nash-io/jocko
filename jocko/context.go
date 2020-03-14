@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/protocol"
 )
 
 type Context struct {

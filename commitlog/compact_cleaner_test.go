@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/commitlog"
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/commitlog"
+	"github.com/nash-io/jocko/protocol"
 )
 
 func TestCompactCleaner(t *testing.T) {

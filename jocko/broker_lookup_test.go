@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/hashicorp/raft"
+	"github.com/nash-io/jocko/jocko/metadata"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/jocko/metadata"
 )
 
 func TestNewBrokerLookup(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/protocol"
 )
 
 // Conn implemenets net.Conn for connections to Jocko brokers. It's used as an internal client for replication fetches and leader and ISR requests.

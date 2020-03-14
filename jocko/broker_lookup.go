@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/hashicorp/raft"
-	"github.com/travisjeffery/jocko/jocko/metadata"
+	"github.com/nash-io/jocko/jocko/metadata"
 )
 
 type brokerLookup struct {

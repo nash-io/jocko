@@ -20,7 +20,7 @@ clean:
 	@rm -rf dist
 
 build-docker:
-	@docker build -t travisjeffery/jocko:$(DOCKER_TAG) .
+	@docker build -t nash-io/jocko:$(DOCKER_TAG) .
 
 generate:
 	@go generate

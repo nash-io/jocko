@@ -11,11 +11,11 @@ import (
 	cluster "github.com/bsm/sarama-cluster"
 	"github.com/hashicorp/consul/testutil/retry"
 	ti "github.com/mitchellh/go-testing-interface"
+	"github.com/nash-io/jocko/jocko"
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/jocko"
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
 )
 
 const (

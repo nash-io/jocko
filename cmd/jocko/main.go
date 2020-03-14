@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/nash-io/jocko/jocko"
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/protocol"
 	"github.com/spf13/cobra"
 	gracefully "github.com/tj/go-gracefully"
-	"github.com/travisjeffery/jocko/jocko"
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/protocol"
 	"github.com/uber/jaeger-lib/metrics"
 
 	"github.com/hashicorp/memberlist"

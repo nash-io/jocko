@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/consul/testutil/retry"
 	"github.com/hashicorp/raft"
 	"github.com/mitchellh/go-testing-interface"
+	"github.com/nash-io/jocko/jocko/config"
 	dynaport "github.com/travisjeffery/go-dynaport"
-	"github.com/travisjeffery/jocko/jocko/config"
 
 	"github.com/uber/jaeger-lib/metrics"
 

@@ -9,10 +9,10 @@ import (
 	"sync"
 
 	"github.com/davecgh/go-spew/spew"
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
 )
 
 type contextKey string

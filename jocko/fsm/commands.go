@@ -3,8 +3,8 @@ package fsm
 import (
 	"fmt"
 
-	"github.com/travisjeffery/jocko/jocko/structs"
-	"github.com/travisjeffery/jocko/log"
+	"github.com/nash-io/jocko/jocko/structs"
+	"github.com/nash-io/jocko/log"
 )
 
 func init() {

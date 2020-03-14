@@ -1,6 +1,6 @@
 # Contributing to Jocko
 
-Here's the [ROADMAP](https://github.com/travisjeffery/jocko/issues/1) where you'll find what could be worked on. The current goal is feature parity with Kafka 0.10.x.
+This repo is a fork of a fork of [Travis Jocko](https://github.com/nash-io/jocko), our goal is to maintain and update the project while Travis is on his hiatus.
 
 When creating a pull-request you should:
 

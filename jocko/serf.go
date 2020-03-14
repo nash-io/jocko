@@ -6,8 +6,8 @@ import (
 
 	"github.com/hashicorp/raft"
 	"github.com/hashicorp/serf/serf"
-	"github.com/travisjeffery/jocko/jocko/metadata"
-	"github.com/travisjeffery/jocko/log"
+	"github.com/nash-io/jocko/jocko/metadata"
+	"github.com/nash-io/jocko/log"
 )
 
 const (

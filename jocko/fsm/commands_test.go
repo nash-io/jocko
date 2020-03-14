@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/hashicorp/raft"
+	"github.com/nash-io/jocko/jocko/structs"
 	stdopentracing "github.com/opentracing/opentracing-go"
-	"github.com/travisjeffery/jocko/jocko/structs"
 )
 
 func TestRegisterNode(t *testing.T) {

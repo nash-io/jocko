@@ -19,10 +19,10 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/stretchr/testify/require"
 
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/jocko/structs"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/jocko/structs"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 )
 
 func TestBroker_Run(t *testing.T) {

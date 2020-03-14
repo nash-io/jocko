@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/nash-io/jocko/commitlog"
+	"github.com/nash-io/jocko/protocol"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/commitlog"
-	"github.com/travisjeffery/jocko/protocol"
 )
 
 func TestDeleteCleaner(t *testing.T) {

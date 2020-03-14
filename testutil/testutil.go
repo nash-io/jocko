@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/log"
 	dynaport "github.com/travisjeffery/go-dynaport"
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/log"
 )
 
 func TestConfig(t *testing.T) (string, *config.Config) {

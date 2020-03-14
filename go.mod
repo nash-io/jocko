@@ -1,6 +1,6 @@
-module github.com/travisjeffery/jocko
+module github.com/nash-io/jocko
 
-go 1.12
+go 1.13
 
 require (
 	github.com/Shopify/sarama v1.13.0
@@ -55,7 +55,7 @@ require (
 	github.com/spf13/pflag v1.0.0
 	github.com/stretchr/testify v1.1.4
 	github.com/tj/go-gracefully v0.0.0-20141227061038-005c1d102f1b
-	github.com/travisjeffery/go-dynaport v0.0.0-20171203090423-24009f4f2f49
+	github.com/travisjeffery/go-dynaport v1.0.0
 	github.com/tysontate/gommap v0.0.0-20131202084435-e87a6e482c2c
 	github.com/uber/jaeger-client-go v2.11.2+incompatible
 	github.com/uber/jaeger-lib v1.3.1

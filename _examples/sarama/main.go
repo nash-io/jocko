@@ -9,10 +9,10 @@ import (
 	"testing"
 
 	"github.com/Shopify/sarama"
-	"github.com/travisjeffery/jocko/jocko"
-	"github.com/travisjeffery/jocko/jocko/config"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/jocko"
+	"github.com/nash-io/jocko/jocko/config"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 )
 
 type check struct {

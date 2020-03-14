@@ -9,10 +9,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/travisjeffery/jocko/jocko"
-	"github.com/travisjeffery/jocko/jocko/structs"
-	"github.com/travisjeffery/jocko/mock"
-	"github.com/travisjeffery/jocko/testutil"
+	"github.com/nash-io/jocko/jocko"
+	"github.com/nash-io/jocko/structs"
+	"github.com/nash-io/jocko/mock"
+	"github.com/nash-io/jocko/testutil"
 )
 
 func TestBroker_Replicate(t *testing.T) {

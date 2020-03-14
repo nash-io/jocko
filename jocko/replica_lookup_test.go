@@ -3,8 +3,8 @@ package jocko
 import (
 	"testing"
 
+	"github.com/nash-io/jocko/jocko/structs"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/jocko/structs"
 )
 
 func TestNewReplicaLookup(t *testing.T) {

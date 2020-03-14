@@ -9,10 +9,10 @@ import (
 
 	memdb "github.com/hashicorp/go-memdb"
 	"github.com/hashicorp/raft"
+	"github.com/nash-io/jocko/jocko/structs"
+	"github.com/nash-io/jocko/jocko/util"
+	"github.com/nash-io/jocko/log"
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/travisjeffery/jocko/jocko/structs"
-	"github.com/travisjeffery/jocko/jocko/util"
-	"github.com/travisjeffery/jocko/log"
 	"github.com/ugorji/go/codec"
 )
 

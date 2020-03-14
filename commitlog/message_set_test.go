@@ -3,8 +3,8 @@ package commitlog_test
 import (
 	"testing"
 
+	"github.com/nash-io/jocko/commitlog"
 	"github.com/stretchr/testify/require"
-	"github.com/travisjeffery/jocko/commitlog"
 )
 
 func TestMessageSet(t *testing.T) {

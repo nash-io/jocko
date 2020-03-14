@@ -12,16 +12,16 @@ builds:
 
 brew:
   github:
-    owner: travisjeffery
+    owner: nash-io
     name: homebrew-tap
 
   commit_author:
-    name: travisjeffery
-    email: tj@travisjeffery.com
+    name: Fabio C Canesin
+    email: canesin@nash.io
 
   folder: Formula
 
-  homepage: "https://github.com/travisjeffery"
+  homepage: "https://github.com/nash-io"
 
   description: "Kafka implemented in Golang with built-in coordination (No ZK dep, single binary install)"
 

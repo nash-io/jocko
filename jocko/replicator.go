@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 )
 
 // Client is used to request other brokers.
