@@ -9,3 +9,5 @@ vendor/*
 .#*
 .DS_Store
 cmd/jocko/jocko
+coverage.txt
+*.tmp
