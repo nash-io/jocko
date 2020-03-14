@@ -10,11 +10,11 @@ import (
 	"github.com/hashicorp/raft"
 	raftboltdb "github.com/hashicorp/raft-boltdb"
 	"github.com/hashicorp/serf/serf"
-	"github.com/travisjeffery/jocko/jocko/fsm"
-	"github.com/travisjeffery/jocko/jocko/metadata"
-	"github.com/travisjeffery/jocko/jocko/structs"
-	"github.com/travisjeffery/jocko/log"
-	"github.com/travisjeffery/jocko/protocol"
+	"github.com/nash-io/jocko/jocko/fsm"
+	"github.com/nash-io/jocko/jocko/metadata"
+	"github.com/nash-io/jocko/jocko/structs"
+	"github.com/nash-io/jocko/log"
+	"github.com/nash-io/jocko/protocol"
 )
 
 const (

@@ -63,6 +63,5 @@ require (
 	golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
 	golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 	upspin.io v0.0.0-20180517055408-63f1073c7a3a
 )

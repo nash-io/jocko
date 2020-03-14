@@ -112,6 +112,8 @@ github.com/tj/go-gracefully v0.0.0-20141227061038-005c1d102f1b h1:EjOGYW5FYZMUVt
 github.com/tj/go-gracefully v0.0.0-20141227061038-005c1d102f1b/go.mod h1:uqlTeGUUfRdQvlQGkv+DYe3lLST3DionEwMA9YAYibY=
 github.com/travisjeffery/go-dynaport v0.0.0-20171203090423-24009f4f2f49 h1:K+L347hjHiye7Xijn7oLHC+nIdXd0Z5cYrp2zt+ZrFk=
 github.com/travisjeffery/go-dynaport v0.0.0-20171203090423-24009f4f2f49/go.mod h1:0LHuDS4QAx+mAc4ri3WkQdavgVoBIZ7cE9ob17KIAJk=
+github.com/travisjeffery/go-dynaport v1.0.0 h1:m/qqf5AHgB96CMMSworIPyo1i7NZueRsnwdzdCJ8Ajw=
+github.com/travisjeffery/go-dynaport v1.0.0/go.mod h1:0LHuDS4QAx+mAc4ri3WkQdavgVoBIZ7cE9ob17KIAJk=
 github.com/tysontate/gommap v0.0.0-20131202084435-e87a6e482c2c h1:TsrnIwyIZbPxVRyG58Tbyb46v5Nx/3DPlKjST9dBo6E=
 github.com/tysontate/gommap v0.0.0-20131202084435-e87a6e482c2c/go.mod h1:D/qzp3BypYxGri+RgzDSv3Fml0qkzA85BPPwrNNYbSs=
 github.com/uber/jaeger-client-go v2.11.2+incompatible h1:D2idO5gYBl+40qnsowJaqtwCV6z1rxYy2yhYBh3mVvI=
@@ -141,7 +143,5 @@ gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 h1:uRGJdciOHaEIrze2W8Q3AKkep
 gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7/go.mod h1:dt/ZhP58zS4L8KSrWDmTeBkI65Dw0HsyUHuEVlX15mw=
 gopkg.in/yaml.v2 v2.2.4 h1:/eiJrUcujPVeJ3xlSWaiNi3uSVmDGBK1pDHUHAnao1I=
 gopkg.in/yaml.v2 v2.2.4/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
-launchpad.net/gocheck v0.0.0-20140225173054-000000000087 h1:Izowp2XBH6Ya6rv+hqbceQyw/gSGoXfH/UPoTGduL54=
-launchpad.net/gocheck v0.0.0-20140225173054-000000000087/go.mod h1:hj7XX3B/0A+80Vse0e+BUHsHMTEhd0O4cpUHr/e/BUM=
 upspin.io v0.0.0-20180517055408-63f1073c7a3a h1:SmRV4ptPhupMzU2o5cWgX9FmOwGLP135Z7jihhmvgtk=
 upspin.io v0.0.0-20180517055408-63f1073c7a3a/go.mod h1:4hdXTXkMPXxzbiw/sultoifpccn98hChAFvrU19V2ug=

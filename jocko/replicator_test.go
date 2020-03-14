@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/nash-io/jocko/jocko"
-	"github.com/nash-io/jocko/structs"
+	"github.com/nash-io/jocko/jocko/structs"
 	"github.com/nash-io/jocko/mock"
 	"github.com/nash-io/jocko/testutil"
 )
