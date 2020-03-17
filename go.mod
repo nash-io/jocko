@@ -11,7 +11,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/go-kit/kit v0.10.0
 	github.com/hashicorp/consul v1.4.5
-	github.com/hashicorp/go-hclog v0.12.1 // indirect
+	github.com/hashicorp/go-hclog v0.12.1
 	github.com/hashicorp/go-memdb v1.1.0
 	github.com/hashicorp/memberlist v0.1.5
 	github.com/hashicorp/raft v1.1.2

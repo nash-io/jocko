@@ -188,7 +188,10 @@ func (b *Broker) Run(ctx context.Context, requests <-chan *Context, responses ch
 			}
 
 			parentSpan := opentracing.SpanFromContext(reqCtx)
-			queueSpan = b.tracer.StartSpan("broker: queue response", opentracing.ChildOf(parentSpan.Context()))
+			queueSpan = b.tracer.StartSpan(
+				"broker: queue response",
+				opentracing.ChildOf(parentSpan.Context()),
+			)
 			responseCtx := context.WithValue(reqCtx, responseQueueSpanKey, queueSpan)
 
 			responses <- &Context{
@@ -235,13 +238,19 @@ func span(ctx context.Context, tracer opentracing.Tracer, op string) opentracing
 
 var apiVersions = &protocol.APIVersionsResponse{APIVersions: protocol.APIVersions}
 
-func (b *Broker) handleAPIVersions(ctx *Context, req *protocol.APIVersionsRequest) *protocol.APIVersionsResponse {
+func (b *Broker) handleAPIVersions(
+	ctx *Context,
+	req *protocol.APIVersionsRequest,
+) *protocol.APIVersionsResponse {
 	sp := span(ctx, b.tracer, "api versions")
 	defer sp.Finish()
 	return apiVersions
 }
 
-func (b *Broker) handleCreateTopic(ctx *Context, reqs *protocol.CreateTopicRequests) *protocol.CreateTopicsResponse {
+func (b *Broker) handleCreateTopic(
+	ctx *Context,
+	reqs *protocol.CreateTopicRequests,
+) *protocol.CreateTopicsResponse {
 	sp := span(ctx, b.tracer, "create topic")
 	defer sp.Finish()
 	res := new(protocol.CreateTopicsResponse)
@@ -276,7 +285,10 @@ func (b *Broker) handleCreateTopic(ctx *Context, reqs *protocol.CreateTopicReque
 	return res
 }
 
-func (b *Broker) handleDeleteTopics(ctx *Context, reqs *protocol.DeleteTopicsRequest) *protocol.DeleteTopicsResponse {
+func (b *Broker) handleDeleteTopics(
+	ctx *Context,
+	reqs *protocol.DeleteTopicsRequest,
+) *protocol.DeleteTopicsResponse {
 	sp := span(ctx, b.tracer, "delete topics")
 	defer sp.Finish()
 	res := new(protocol.DeleteTopicsResponse)
@@ -293,11 +305,14 @@ func (b *Broker) handleDeleteTopics(ctx *Context, reqs *protocol.DeleteTopicsReq
 		}
 		err := b.withTimeout(reqs.Timeout, func() protocol.Error {
 			// TODO: this will delete from fsm -- need to delete associated partitions, etc.
-			_, err := b.raftApply(structs.DeregisterTopicRequestType, structs.DeregisterTopicRequest{
-				structs.Topic{
-					Topic: topic,
+			_, err := b.raftApply(
+				structs.DeregisterTopicRequestType,
+				structs.DeregisterTopicRequest{
+					structs.Topic{
+						Topic: topic,
+					},
 				},
-			})
+			)
 			if err != nil {
 				return protocol.ErrUnknown.WithErr(err)
 			}
@@ -311,7 +326,10 @@ func (b *Broker) handleDeleteTopics(ctx *Context, reqs *protocol.DeleteTopicsReq
 	return res
 }
 
-func (b *Broker) handleLeaderAndISR(ctx *Context, req *protocol.LeaderAndISRRequest) *protocol.LeaderAndISRResponse {
+func (b *Broker) handleLeaderAndISR(
+	ctx *Context,
+	req *protocol.LeaderAndISRRequest,
+) *protocol.LeaderAndISRResponse {
 	sp := span(ctx, b.tracer, "leader and isr")
 	defer sp.Finish()
 	res := &protocol.LeaderAndISRResponse{
@@ -367,12 +385,19 @@ func (b *Broker) handleLeaderAndISR(ctx *Context, req *protocol.LeaderAndISRRequ
 				continue
 			}
 		}
-		res.Partitions[i] = &protocol.LeaderAndISRPartition{Partition: p.Partition, Topic: p.Topic, ErrorCode: protocol.ErrNone.Code()}
+		res.Partitions[i] = &protocol.LeaderAndISRPartition{
+			Partition: p.Partition,
+			Topic:     p.Topic,
+			ErrorCode: protocol.ErrNone.Code(),
+		}
 	}
 	return res
 }
 
-func (b *Broker) handleOffsets(ctx *Context, req *protocol.OffsetsRequest) *protocol.OffsetsResponse {
+func (b *Broker) handleOffsets(
+	ctx *Context,
+	req *protocol.OffsetsRequest,
+) *protocol.OffsetsResponse {
 	sp := span(ctx, b.tracer, "offsets")
 	defer sp.Finish()
 	res := new(protocol.OffsetsResponse)
@@ -381,7 +406,11 @@ func (b *Broker) handleOffsets(ctx *Context, req *protocol.OffsetsRequest) *prot
 	for i, t := range req.Topics {
 		res.Responses[i] = new(protocol.OffsetResponse)
 		res.Responses[i].Topic = t.Topic
-		res.Responses[i].PartitionResponses = make([]*protocol.PartitionResponse, 0, len(t.Partitions))
+		res.Responses[i].PartitionResponses = make(
+			[]*protocol.PartitionResponse,
+			0,
+			len(t.Partitions),
+		)
 		for _, p := range t.Partitions {
 			pres := new(protocol.PartitionResponse)
 			pres.Partition = p.Partition
@@ -405,7 +434,10 @@ func (b *Broker) handleOffsets(ctx *Context, req *protocol.OffsetsRequest) *prot
 	return res
 }
 
-func (b *Broker) handleProduce(ctx *Context, req *protocol.ProduceRequest) *protocol.ProduceResponse {
+func (b *Broker) handleProduce(
+	ctx *Context,
+	req *protocol.ProduceRequest,
+) *protocol.ProduceResponse {
 	sp := span(ctx, b.tracer, "produce")
 	defer sp.Finish()
 	res := new(protocol.ProduceResponse)
@@ -422,11 +454,18 @@ func (b *Broker) handleProduce(ctx *Context, req *protocol.ProduceRequest) *prot
 				state := b.fsm.State()
 				_, t, err := state.GetTopic(td.Topic)
 				if err != nil {
-					log.Error.Printf("broker/%d: produce to partition error: get topic: %s", b.config.ID, err)
+					log.Error.Printf(
+						"broker/%d: produce to partition error: get topic: %s",
+						b.config.ID,
+						err,
+					)
 					return protocol.ErrUnknown.WithErr(err)
 				}
 				if t == nil {
-					log.Error.Printf("broker/%d: produce to partition error: unknown topic", b.config.ID)
+					log.Error.Printf(
+						"broker/%d: produce to partition error: unknown topic",
+						b.config.ID,
+					)
 					return protocol.ErrUnknownTopicOrPartition
 				}
 				replica, err := b.replicaLookup.Replica(td.Topic, p.Partition)
@@ -455,7 +494,10 @@ func (b *Broker) handleProduce(ctx *Context, req *protocol.ProduceRequest) *prot
 	return res
 }
 
-func (b *Broker) handleMetadata(ctx *Context, req *protocol.MetadataRequest) *protocol.MetadataResponse {
+func (b *Broker) handleMetadata(
+	ctx *Context,
+	req *protocol.MetadataRequest,
+) *protocol.MetadataResponse {
 	sp := span(ctx, b.tracer, "metadata")
 	defer sp.Finish()
 	state := b.fsm.State()
@@ -558,7 +600,10 @@ func (b *Broker) handleMetadata(ctx *Context, req *protocol.MetadataRequest) *pr
 	return res
 }
 
-func (b *Broker) handleFindCoordinator(ctx *Context, req *protocol.FindCoordinatorRequest) *protocol.FindCoordinatorResponse {
+func (b *Broker) handleFindCoordinator(
+	ctx *Context,
+	req *protocol.FindCoordinatorRequest,
+) *protocol.FindCoordinatorResponse {
 	sp := span(ctx, b.tracer, "find coordinator")
 	defer sp.Finish()
 
@@ -602,7 +647,10 @@ ERROR:
 	return res
 }
 
-func (b *Broker) handleJoinGroup(ctx *Context, r *protocol.JoinGroupRequest) *protocol.JoinGroupResponse {
+func (b *Broker) handleJoinGroup(
+	ctx *Context,
+	r *protocol.JoinGroupRequest,
+) *protocol.JoinGroupResponse {
 	sp := span(ctx, b.tracer, "join group")
 	defer sp.Finish()
 
@@ -653,7 +701,10 @@ func (b *Broker) handleJoinGroup(ctx *Context, r *protocol.JoinGroupRequest) *pr
 	if res.LeaderID == res.MemberID {
 		// fill in members on response, we only do this for the leader to reduce overhead
 		for _, m := range group.Members {
-			res.Members = append(res.Members, protocol.Member{MemberID: m.ID, MemberMetadata: m.Metadata})
+			res.Members = append(
+				res.Members,
+				protocol.Member{MemberID: m.ID, MemberMetadata: m.Metadata},
+			)
 		}
 
 	}
@@ -661,7 +712,10 @@ func (b *Broker) handleJoinGroup(ctx *Context, r *protocol.JoinGroupRequest) *pr
 	return res
 }
 
-func (b *Broker) handleLeaveGroup(ctx *Context, r *protocol.LeaveGroupRequest) *protocol.LeaveGroupResponse {
+func (b *Broker) handleLeaveGroup(
+	ctx *Context,
+	r *protocol.LeaveGroupRequest,
+) *protocol.LeaveGroupResponse {
 	sp := span(ctx, b.tracer, "leave group")
 	defer sp.Finish()
 
@@ -698,7 +752,10 @@ func (b *Broker) handleLeaveGroup(ctx *Context, r *protocol.LeaveGroupRequest) *
 	return res
 }
 
-func (b *Broker) handleSyncGroup(ctx *Context, r *protocol.SyncGroupRequest) *protocol.SyncGroupResponse {
+func (b *Broker) handleSyncGroup(
+	ctx *Context,
+	r *protocol.SyncGroupRequest,
+) *protocol.SyncGroupResponse {
 	sp := span(ctx, b.tracer, "sync group")
 	defer sp.Finish()
 
@@ -783,7 +840,10 @@ func (b *Broker) handleSyncGroup(ctx *Context, r *protocol.SyncGroupRequest) *pr
 	return res
 }
 
-func (b *Broker) handleHeartbeat(ctx *Context, r *protocol.HeartbeatRequest) *protocol.HeartbeatResponse {
+func (b *Broker) handleHeartbeat(
+	ctx *Context,
+	r *protocol.HeartbeatRequest,
+) *protocol.HeartbeatResponse {
 	sp := span(ctx, b.tracer, "heartbeat")
 	defer sp.Finish()
 
@@ -844,7 +904,7 @@ func (b *Broker) handleFetch(ctx *Context, r *protocol.FetchRequest) *protocol.F
 					// TODO: copy these bytes to outer bytes
 					nn, err := io.Copy(buf, rdr)
 					if err != nil && err != io.EOF {
-						log.Error.Printf("broker/%d: reader copy error", b.config.ID, err)
+						log.Error.Printf("broker/%d: reader copy error, %s", b.config.ID, err)
 						return protocol.ErrUnknown.WithErr(rdrErr)
 					}
 					n += int32(nn)
@@ -865,12 +925,18 @@ func (b *Broker) handleFetch(ctx *Context, r *protocol.FetchRequest) *protocol.F
 	return fres
 }
 
-func (b *Broker) handleSaslHandshake(ctx *Context, req *protocol.SaslHandshakeRequest) *protocol.SaslHandshakeResponse {
+func (b *Broker) handleSaslHandshake(
+	ctx *Context,
+	req *protocol.SaslHandshakeRequest,
+) *protocol.SaslHandshakeResponse {
 	panic("not implemented: sasl handshake")
 	return nil
 }
 
-func (b *Broker) handleListGroups(ctx *Context, req *protocol.ListGroupsRequest) *protocol.ListGroupsResponse {
+func (b *Broker) handleListGroups(
+	ctx *Context,
+	req *protocol.ListGroupsRequest,
+) *protocol.ListGroupsResponse {
 	sp := span(ctx, b.tracer, "create topic")
 	defer sp.Finish()
 	res := new(protocol.ListGroupsResponse)
@@ -896,7 +962,10 @@ func (b *Broker) handleListGroups(ctx *Context, req *protocol.ListGroupsRequest)
 	return res
 }
 
-func (b *Broker) handleDescribeGroups(ctx *Context, req *protocol.DescribeGroupsRequest) *protocol.DescribeGroupsResponse {
+func (b *Broker) handleDescribeGroups(
+	ctx *Context,
+	req *protocol.DescribeGroupsRequest,
+) *protocol.DescribeGroupsResponse {
 	sp := span(ctx, b.tracer, "create topic")
 	defer sp.Finish()
 	res := new(protocol.DescribeGroupsResponse)
@@ -936,27 +1005,42 @@ func (b *Broker) handleDescribeGroups(ctx *Context, req *protocol.DescribeGroups
 	return res
 }
 
-func (b *Broker) handleStopReplica(ctx *Context, req *protocol.StopReplicaRequest) *protocol.StopReplicaResponse {
+func (b *Broker) handleStopReplica(
+	ctx *Context,
+	req *protocol.StopReplicaRequest,
+) *protocol.StopReplicaResponse {
 	panic("not implemented: stop replica")
 	return nil
 }
 
-func (b *Broker) handleUpdateMetadata(ctx *Context, req *protocol.UpdateMetadataRequest) *protocol.UpdateMetadataResponse {
+func (b *Broker) handleUpdateMetadata(
+	ctx *Context,
+	req *protocol.UpdateMetadataRequest,
+) *protocol.UpdateMetadataResponse {
 	panic("not implemented: update metadata")
 	return nil
 }
 
-func (b *Broker) handleControlledShutdown(ctx *Context, req *protocol.ControlledShutdownRequest) *protocol.ControlledShutdownResponse {
+func (b *Broker) handleControlledShutdown(
+	ctx *Context,
+	req *protocol.ControlledShutdownRequest,
+) *protocol.ControlledShutdownResponse {
 	panic("not implemented: controlled shutdown")
 	return nil
 }
 
-func (b *Broker) handleOffsetCommit(ctx *Context, req *protocol.OffsetCommitRequest) *protocol.OffsetCommitResponse {
+func (b *Broker) handleOffsetCommit(
+	ctx *Context,
+	req *protocol.OffsetCommitRequest,
+) *protocol.OffsetCommitResponse {
 	panic("not implemented: offset commit")
 	return nil
 }
 
-func (b *Broker) handleOffsetFetch(ctx *Context, req *protocol.OffsetFetchRequest) *protocol.OffsetFetchResponse {
+func (b *Broker) handleOffsetFetch(
+	ctx *Context,
+	req *protocol.OffsetFetchRequest,
+) *protocol.OffsetFetchResponse {
 	sp := span(ctx, b.tracer, "create topic")
 	defer sp.Finish()
 
@@ -1006,17 +1090,27 @@ func (b *Broker) startReplica(replica *Replica) protocol.Error {
 	// TODO: think i need to just ensure/add the topic if it's not here yet
 
 	if topic == nil {
-		log.Info.Printf("broker/%d: start replica called on unknown topic: %s", b.config.ID, replica.Partition.Topic)
+		log.Info.Printf(
+			"broker/%d: start replica called on unknown topic: %s",
+			b.config.ID,
+			replica.Partition.Topic,
+		)
 		return protocol.ErrUnknownTopicOrPartition
 	}
 
 	if replica.Log == nil {
-		path := filepath.Join(b.config.DataDir, "data", fmt.Sprintf("%s-%d", replica.Partition.Topic, replica.Partition.ID))
+		path := filepath.Join(
+			b.config.DataDir,
+			"data",
+			fmt.Sprintf("%s-%d", replica.Partition.Topic, replica.Partition.ID),
+		)
 		log, err := commitlog.New(commitlog.Options{
 			Path:            path,
 			MaxSegmentBytes: 1024,
 			MaxLogBytes:     -1,
-			CleanupPolicy:   commitlog.CleanupPolicy(topic.Config.GetValue("cleanup.policy").(string)),
+			CleanupPolicy: commitlog.CleanupPolicy(
+				topic.Config.GetValue("cleanup.policy").(string),
+			),
 		})
 		if err != nil {
 			return protocol.ErrUnknown.WithErr(err)
@@ -1076,7 +1170,13 @@ func (b *Broker) createTopic(ctx *Context, topic *protocol.CreateTopicRequest) p
 		if broker.ID.Int32() == b.config.ID {
 			errCode := b.handleLeaderAndISR(ctx, req).ErrorCode
 			if protocol.ErrNone.Code() != errCode {
-				panic(fmt.Sprintf("broker/%d: handling leader and isr error: %d", b.config.ID, errCode))
+				panic(
+					fmt.Sprintf(
+						"broker/%d: handling leader and isr error: %d",
+						b.config.ID,
+						errCode,
+					),
+				)
 			}
 		} else {
 			conn, err := Dial("tcp", broker.BrokerAddr)
@@ -1094,7 +1194,11 @@ func (b *Broker) createTopic(ctx *Context, topic *protocol.CreateTopicRequest) p
 	return protocol.ErrNone
 }
 
-func (b *Broker) buildPartitions(topic string, partitionsCount int32, replicationFactor int16) ([]structs.Partition, protocol.Error) {
+func (b *Broker) buildPartitions(
+	topic string,
+	partitionsCount int32,
+	replicationFactor int16,
+) ([]structs.Partition, protocol.Error) {
 	brokers := b.brokerLookup.Brokers()
 	count := len(brokers)
 
@@ -1237,7 +1341,12 @@ func (b *Broker) becomeFollower(replica *Replica, cmd *protocol.PartitionState) 
 	if broker == nil {
 		return protocol.ErrBrokerNotAvailable
 	}
-	conn, err := NewDialer(fmt.Sprintf("jocko-replicator-%d", b.config.ID)).Dial("tcp", broker.BrokerAddr)
+	conn, err := NewDialer(
+		fmt.Sprintf("jocko-replicator-%d", b.config.ID),
+	).Dial(
+		"tcp",
+		broker.BrokerAddr,
+	)
 	if err != nil {
 		return protocol.ErrUnknown.WithErr(err)
 	}
@@ -1329,7 +1438,14 @@ type Replica struct {
 }
 
 func (r Replica) String() string {
-	return fmt.Sprintf("replica: %d {broker: %d, leader: %d, hw: %d, leo: %d}", r.Partition.ID, r.BrokerID, r.Partition.Leader, r.Hw, r.Leo)
+	return fmt.Sprintf(
+		"replica: %d {broker: %d, leader: %d, hw: %d, leo: %d}",
+		r.Partition.ID,
+		r.BrokerID,
+		r.Partition.Leader,
+		r.Hw,
+		r.Leo,
+	)
 }
 
 func (b *Broker) offsetsTopic(ctx *Context) (topic *structs.Topic, err error) {
@@ -1345,7 +1461,11 @@ func (b *Broker) offsetsTopic(ctx *Context) (topic *structs.Topic, err error) {
 	}
 
 	// doesn't exist so let's create it
-	partitions, err := b.buildPartitions(OffsetsTopicName, 50, b.config.OffsetsTopicReplicationFactor)
+	partitions, err := b.buildPartitions(
+		OffsetsTopicName,
+		50,
+		b.config.OffsetsTopicReplicationFactor,
+	)
 	if err != protocol.ErrNone {
 		return nil, err
 	}
@@ -1408,7 +1528,15 @@ func (b *Broker) logState() {
 			buf.WriteString("\tmembers:\n")
 			members := b.LANMembers()
 			for i, member := range members {
-				buf.WriteString(fmt.Sprintf("\t\t- %d:\n\t\t\tname: %s\n\t\t\taddr: %s\n\t\t\tstatus: %s\n", i, member.Name, member.Addr, member.Status))
+				buf.WriteString(
+					fmt.Sprintf(
+						"\t\t- %d:\n\t\t\tname: %s\n\t\t\taddr: %s\n\t\t\tstatus: %s\n",
+						i,
+						member.Name,
+						member.Addr,
+						member.Status,
+					),
+				)
 			}
 			buf.WriteString("\tnodes:\n")
 			state := b.fsm.State()
@@ -1417,7 +1545,14 @@ func (b *Broker) logState() {
 				panic(err)
 			}
 			for i, node := range nodes {
-				buf.WriteString(fmt.Sprintf("\t\t- %d:\n\t\t\tid: %d\n\t\t\tstatus: %s\n", i, node.Node, node.Check.Status))
+				buf.WriteString(
+					fmt.Sprintf(
+						"\t\t- %d:\n\t\t\tid: %d\n\t\t\tstatus: %s\n",
+						i,
+						node.Node,
+						node.Check.Status,
+					),
+				)
 			}
 			_, topics, err := state.GetTopics()
 			if err != nil {
@@ -1425,7 +1560,14 @@ func (b *Broker) logState() {
 			}
 			buf.WriteString("\ttopics:\n")
 			for i, topic := range topics {
-				buf.WriteString(fmt.Sprintf("\t\t- %d:\n\t\t\tid: %s\n\t\t\tpartitions: %v\n", i, topic.Topic, topic.Partitions))
+				buf.WriteString(
+					fmt.Sprintf(
+						"\t\t- %d:\n\t\t\tid: %s\n\t\t\tpartitions: %v\n",
+						i,
+						topic.Topic,
+						topic.Partitions,
+					),
+				)
 			}
 			log.Info.Printf("broker/%d: state:\n%s", b.config.ID, buf.String())
 		}

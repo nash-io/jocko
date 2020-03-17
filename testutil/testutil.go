@@ -22,7 +22,9 @@ func TestConfig(t *testing.T) (string, *config.Config) {
 	config.Bootstrap = true
 	config.DataDir = dir
 	config.ID = atomic.AddInt32(&nodeID, 1)
-	config.SerfLANConfig.Logger = log.NewStdLogger(log.New(log.DebugLevel, fmt.Sprintf("serf/%d: ", config.ID)))
+	config.SerfLANConfig.Logger = log.NewStdLogger(
+		log.New(log.DebugLevel, fmt.Sprintf("serf/%d: ", config.ID)),
+	)
 	config.OffsetsTopicReplicationFactor = 3
 	config.SerfLANConfig.MemberlistConfig.BindAddr = "127.0.0.1"
 	config.SerfLANConfig.MemberlistConfig.BindPort = ports[1]
@@ -32,8 +34,10 @@ func TestConfig(t *testing.T) (string, *config.Config) {
 	config.SerfLANConfig.MemberlistConfig.ProbeTimeout = 50 * time.Millisecond
 	config.SerfLANConfig.MemberlistConfig.ProbeInterval = 100 * time.Millisecond
 	config.SerfLANConfig.MemberlistConfig.GossipInterval = 100 * time.Millisecond
-	config.SerfLANConfig.MemberlistConfig.Logger = log.NewStdLogger(log.New(log.DebugLevel, fmt.Sprintf("memberlist/%d: ", config.ID)))
-	config.RaftConfig.Logger = log.NewStdLogger(log.New(log.DebugLevel, fmt.Sprintf("raft/%d: ", config.ID)))
+	config.SerfLANConfig.MemberlistConfig.Logger = log.NewStdLogger(
+		log.New(log.DebugLevel, fmt.Sprintf("memberlist/%d: ", config.ID)),
+	)
+	config.RaftConfig.Logger = log.New(log.DebugLevel, fmt.Sprintf("raft/%d: ", config.ID))
 	config.RaftConfig.LeaderLeaseTimeout = 100 * time.Millisecond
 	config.RaftConfig.HeartbeatTimeout = 200 * time.Millisecond
 	config.RaftConfig.ElectionTimeout = 200 * time.Millisecond
