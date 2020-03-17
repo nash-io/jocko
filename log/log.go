@@ -1,95 +1,52 @@
 package log
 
 import (
-	stdlog "log"
+	"log"
 
-	"upspin.io/log"
+	"github.com/hashicorp/go-hclog"
 )
 
 var (
-	Debug = &logger{l: log.Debug}
-	Info  = &logger{l: log.Info}
-	Error = &logger{l: log.Error}
+	Error *log.Logger = hclog.Default().StandardLogger(&hclog.StandardLoggerOptions{
+		InferLevels: false,
+		ForceLevel:  hclog.Error,
+	})
+
+	Debug *log.Logger = hclog.Default().StandardLogger(&hclog.StandardLoggerOptions{
+		InferLevels: false,
+		ForceLevel:  hclog.Debug,
+	})
+
+	Info *log.Logger = hclog.Default().StandardLogger(&hclog.StandardLoggerOptions{
+		InferLevels: false,
+		ForceLevel:  hclog.Info,
+	})
+
+	Trace *log.Logger = hclog.Default().StandardLogger(&hclog.StandardLoggerOptions{
+		InferLevels: false,
+		ForceLevel:  hclog.Trace,
+	})
+
+	DebugLevel hclog.Level = hclog.Debug
 )
 
-type logger struct {
-	prefix string
-	l      log.Logger
-}
-
-type Level = log.Level
-
-var (
-	DebugLevel = log.DebugLevel
-	InfoLevel  = log.InfoLevel
-	ErrorLevel = log.ErrorLevel
-)
-
-func New(level log.Level, prefix string) *logger {
-	l := &logger{prefix: prefix}
-	switch level {
-	case log.DebugLevel:
-		l.l = log.Debug
-	case log.InfoLevel:
-		l.l = log.Info
-	case log.ErrorLevel:
-		l.l = log.Error
-	}
+func New(level hclog.Level, prefix string) hclog.Logger {
+	l := hclog.New(nil)
 	return l
 }
 
 func SetPrefix(prefix string) {
-	for _, logger := range []*logger{Debug, Info, Error} {
-		logger.prefix = prefix
-	}
+	hclog.SetDefault(hclog.Default().ResetNamed(prefix))
 }
 
 func SetLevel(level string) {
-	log.SetLevel(level)
+	lvl := hclog.LevelFromString(level)
+	hclog.Default().SetLevel(lvl)
 }
 
-func NewStdLogger(l log.Logger) *stdlog.Logger {
-	return log.NewStdLogger(l)
+func NewStdLogger(l hclog.Logger) *log.Logger {
+	stdLogger := l.StandardLogger(&hclog.StandardLoggerOptions{
+		InferLevels: true,
+	})
+	return stdLogger
 }
-
-func (l *logger) Printf(format string, v ...interface{}) {
-	if l.prefix == "" {
-		l.l.Printf(format, v...)
-	} else {
-		l.l.Printf(l.prefix+format, v...)
-	}
-}
-
-func (l *logger) Print(v ...interface{}) {
-	if l.prefix == "" {
-		l.l.Print(v...)
-	} else {
-		l.l.Print(append([]interface{}{l.prefix}, v...)...)
-	}
-}
-
-func (l *logger) Println(v ...interface{}) {
-	if l.prefix == "" {
-		l.l.Println(v...)
-	} else {
-		l.l.Println(append([]interface{}{l.prefix}, v...)...)
-	}
-}
-
-func (l *logger) Fatal(v ...interface{}) {
-	if l.prefix == "" {
-		l.l.Fatal(v...)
-	} else {
-		l.l.Fatal(append([]interface{}{l.prefix}, v...)...)
-	}
-}
-
-func (l *logger) Fatalf(format string, v ...interface{}) {
-	if l.prefix == "" {
-		l.l.Fatalf(format, v...)
-	} else {
-		l.l.Fatalf(l.prefix+format, v...)
-	}
-}
-
-var _ log.Logger = (*logger)(nil)

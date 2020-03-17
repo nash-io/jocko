@@ -41,7 +41,7 @@ func (b *Broker) setupRaft() (err error) {
 		nil,
 		3,
 		10*time.Second,
-		log.NewStdLogger(log.New(log.DebugLevel, fmt.Sprintf("raft transport/%d: ", b.config.ID))),
+		log.New(log.DebugLevel, fmt.Sprintf("raft transport/%d: ", b.config.ID)),
 	)
 	if err != nil {
 		return err
@@ -112,8 +112,7 @@ func (b *Broker) setupRaft() (err error) {
 	raftNotifyCh := make(chan bool, 1)
 	b.config.RaftConfig.NotifyCh = raftNotifyCh
 	b.raftNotifyCh = raftNotifyCh
-	b.config.RaftConfig.Logger = log.NewStdLogger(log.New(log.DebugLevel, fmt.Sprintf("raft/%d: ", b.config.ID)))
-
+	b.config.RaftConfig.Logger = log.New(log.DebugLevel, fmt.Sprintf("raft/%d: ", b.config.ID))
 	// setup raft store
 	b.raft, err = raft.NewRaft(b.config.RaftConfig, b.fsm, logStore, stable, snap, trans)
 	return err
@@ -129,7 +128,10 @@ func (b *Broker) monitorLeadership() {
 			switch {
 			case isLeader:
 				if weAreLeaderCh != nil {
-					log.Error.Printf("leader/%d: attempted to start the leader loop while running", b.config.ID)
+					log.Error.Printf(
+						"leader/%d: attempted to start the leader loop while running",
+						b.config.ID,
+					)
 					continue
 				}
 				weAreLeaderCh = make(chan struct{})
@@ -142,7 +144,10 @@ func (b *Broker) monitorLeadership() {
 
 			default:
 				if weAreLeaderCh == nil {
-					log.Error.Printf("leader/%d: attempted to stop the leader loop while not running", b.config.ID)
+					log.Error.Printf(
+						"leader/%d: attempted to stop the leader loop while not running",
+						b.config.ID,
+					)
 					continue
 				}
 				log.Debug.Printf("leader/%d: shutting down leader loop", b.config.ID)
@@ -269,7 +274,7 @@ func (b *Broker) reconcileMember(m serf.Member) error {
 		err = b.handleLeftMember(m)
 	}
 	if err != nil {
-		log.Error.Printf("leader/%d: reconcile member: %s: error: %s", m.Name, b.config.ID, err)
+		log.Error.Printf("leader/%d: reconcile member: %s: error: %s", b.config.ID, m.Name, err)
 	}
 	return nil
 }
@@ -359,7 +364,12 @@ func (b *Broker) handleDeregisterMember(reason string, member serf.Member) error
 		return nil
 	}
 
-	log.Info.Printf("leader/%d: member is deregistering: reason: %s; node: %s", b.config.ID, reason, meta.ID)
+	log.Info.Printf(
+		"leader/%d: member is deregistering: reason: %s; node: %s",
+		b.config.ID,
+		reason,
+		meta.ID,
+	)
 	req := structs.DeregisterNodeRequest{
 		Node: structs.Node{Node: meta.ID.Int32()},
 	}
@@ -373,7 +383,10 @@ func (b *Broker) joinCluster(m serf.Member, parts *metadata.Broker) error {
 		for _, member := range members {
 			p, ok := metadata.IsBroker(member)
 			if ok && member.Name != m.Name && p.Bootstrap {
-				log.Error.Printf("leader/%d: multiple nodes in bootstrap mode. there can only be one.", b.config.ID)
+				log.Error.Printf(
+					"leader/%d: multiple nodes in bootstrap mode. there can only be one.",
+					b.config.ID,
+				)
 				return nil
 			}
 		}
@@ -390,21 +403,31 @@ func (b *Broker) joinCluster(m serf.Member, parts *metadata.Broker) error {
 	// safe to attempt if there are multiple servers available.
 	if m.Name == b.config.NodeName {
 		if l := len(configFuture.Configuration().Servers); l < 3 {
-			log.Debug.Printf("leader/%d: skipping self join since cluster is too small: servers: %d", b.config.ID, l)
+			log.Debug.Printf(
+				"leader/%d: skipping self join since cluster is too small: servers: %d",
+				b.config.ID,
+				l,
+			)
 			return nil
 		}
 	}
 
 	for _, server := range configFuture.Configuration().Servers {
-		if server.Address == raft.ServerAddress(parts.RaftAddr) || server.ID == raft.ServerID(parts.ID.String()) {
-			if server.Address == raft.ServerAddress(parts.RaftAddr) && server.ID == raft.ServerID(parts.ID.String()) {
+		if server.Address == raft.ServerAddress(parts.RaftAddr) ||
+			server.ID == raft.ServerID(parts.ID.String()) {
+			if server.Address == raft.ServerAddress(parts.RaftAddr) &&
+				server.ID == raft.ServerID(parts.ID.String()) {
 				// no-op if this is being called on an existing server
 				return nil
 			}
 			future := b.raft.RemoveServer(server.ID, 0, 0)
 			if server.Address == raft.ServerAddress(parts.RaftAddr) {
 				if err := future.Error(); err != nil {
-					return fmt.Errorf("error removing server with duplicate address %q: %s", server.Address, err)
+					return fmt.Errorf(
+						"error removing server with duplicate address %q: %s",
+						server.Address,
+						err,
+					)
 				}
 				log.Info.Printf("removed server with duplicated address: %s", server.Address)
 			} else {
@@ -417,7 +440,12 @@ func (b *Broker) joinCluster(m serf.Member, parts *metadata.Broker) error {
 	}
 
 	if parts.NonVoter {
-		addFuture := b.raft.AddNonvoter(raft.ServerID(parts.ID.String()), raft.ServerAddress(parts.RaftAddr), 0, 0)
+		addFuture := b.raft.AddNonvoter(
+			raft.ServerID(parts.ID.String()),
+			raft.ServerAddress(parts.RaftAddr),
+			0,
+			0,
+		)
 		if err := addFuture.Error(); err != nil {
 			log.Error.Printf("leader/%d: add raft peer error: %s", b.config.ID, err)
 			return err
@@ -541,14 +569,17 @@ func (b *Broker) handleFailedMember(m serf.Member) error {
 			return err
 		}
 		// TODO: need to send on leader and isr changes now i think
-		leaderAndISRReq.PartitionStates = append(leaderAndISRReq.PartitionStates, &protocol.PartitionState{
-			Topic:     p.Topic,
-			Partition: p.Partition,
-			// TODO: ControllerEpoch, LeaderEpoch, ZKVersion - lol
-			Leader:   p.Leader,
-			ISR:      p.ISR,
-			Replicas: p.AR,
-		})
+		leaderAndISRReq.PartitionStates = append(
+			leaderAndISRReq.PartitionStates,
+			&protocol.PartitionState{
+				Topic:     p.Topic,
+				Partition: p.Partition,
+				// TODO: ControllerEpoch, LeaderEpoch, ZKVersion - lol
+				Leader:   p.Leader,
+				ISR:      p.ISR,
+				Replicas: p.AR,
+			},
+		)
 	}
 
 	// TODO: optimize this to send requests to only nodes affected
@@ -556,7 +587,7 @@ func (b *Broker) handleFailedMember(m serf.Member) error {
 		broker := b.brokerLookup.BrokerByID(raft.ServerID(fmt.Sprintf("%d", n.Node)))
 		if broker == nil {
 			// TODO: this probably shouldn't happen -- likely a root issue to fix
-			log.Error.Printf("trying to assign partitions to unknown broker: %s", n)
+			log.Error.Printf("trying to assign partitions to unknown broker: %+v", n)
 			continue
 		}
 		conn, err := defaultDialer.Dial("tcp", broker.BrokerAddr)
