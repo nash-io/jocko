@@ -27,12 +27,13 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/cobra v0.0.3
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.5.1
 	github.com/tj/go-gracefully v0.0.0-20141227061038-005c1d102f1b
 	github.com/travisjeffery/go-dynaport v1.0.0
 	github.com/uber/jaeger-client-go v2.22.1+incompatible
 	github.com/uber/jaeger-lib v2.2.0+incompatible
 	github.com/ugorji/go/codec v1.1.7
 	go.uber.org/atomic v1.6.0 // indirect
-	upspin.io v0.0.0-20200124224713-5ddde7b8e6ff
+	golang.org/x/crypto v0.0.0-20191117063200-497ca9f6d64f // indirect
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
