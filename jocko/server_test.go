@@ -234,7 +234,11 @@ func TestConsumerGroup(t *testing.T) {
 			r.Fatalf("err: %v", err)
 		}
 		if 3 != len(client.Brokers()) {
-			r.Fatalf("client didn't find the right number of brokers: got %d, want %d", len(client.Brokers()), 3)
+			r.Fatalf(
+				"client didn't find the right number of brokers: got %d, want %d",
+				len(client.Brokers()),
+				3,
+			)
 		}
 	})
 
