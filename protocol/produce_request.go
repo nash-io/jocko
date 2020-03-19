@@ -51,9 +51,11 @@ func (r *ProduceRequest) Encode(e PacketEncoder) (err error) {
 
 func (r *ProduceRequest) Decode(d PacketDecoder, version int16) (err error) {
 	r.APIVersion = version
-	r.TransactionalID, err = d.NullableString()
-	if err != nil {
-		return err
+	if r.APIVersion >= 3 {
+		r.TransactionalID, err = d.NullableString()
+		if err != nil {
+			return err
+		}
 	}
 
 	r.Acks, err = d.Int16()
